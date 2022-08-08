@@ -1,0 +1,79 @@
+-------------------------------------------------------
+	        	with ip
+-------------------------------------------------------
+SELECT 
+inet_ntoa(conv(substr(hex(segment),25,8),16,10)) as ip,
+vgroups.login,
+vgroups.current_shape as speed,
+accounts.name as fio, 
+accounts_addr.address,
+CONCAT(accounts.pass_sernum,
+accounts.pass_no,
+accounts.pass_issuedate,
+accounts.pass_issuedep,
+accounts.pass_issueplace) as document,
+accounts.birthdate as birthday,
+vgroups.acc_ondate as conn_date,
+vgroups.acc_offdate as off_date,
+CONCAT(accounts.phone, 
+accounts.email) as dop_inf
+FROM staff, accounts, vgroups, accounts_addr
+WHERE accounts.uid = vgroups.uid and accounts.uid = accounts_addr.uid and staff.vg_id = vgroups.vg_id and accounts_addr.type = 1 LIMIT 0, 1500
+
+-------------------------------------------------------
+	        	no ip
+-------------------------------------------------------
+SELECT 
+vgroups.login,
+vgroups.current_shape as speed,
+accounts.name as fio, 
+accounts_addr.address,
+CONCAT(accounts.pass_sernum,
+accounts.pass_no,
+accounts.pass_issuedate,
+accounts.pass_issuedep,
+accounts.pass_issueplace) as document,
+accounts.birthdate as birthday,
+vgroups.acc_ondate as conn_date,
+vgroups.acc_offdate as off_date,
+CONCAT(accounts.phone, 
+accounts.email) as dop_inf
+FROM accounts, vgroups, accounts_addr
+WHERE accounts.uid = vgroups.uid and accounts.uid = accounts_addr.uid and accounts_addr.type = 1 LIMIT 0, 1500
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+SELECT 
+inet_ntoa(conv(substr(hex(segment),25,8),16,10)) as ip,
+vgroups.login,
+vgroups.current_shape as speed,
+accounts.name as fio, 
+accounts_addr.address,
+CONCAT_WS(' ', accounts.pass_sernum,
+accounts.pass_no,
+accounts.pass_issuedate,
+accounts.pass_issuedep,
+accounts.pass_issueplace) as document,
+accounts.birthdate as birthday,
+vgroups.acc_ondate as conn_date,
+vgroups.acc_offdate as off_date,
+CONCAT_WS(' ', accounts.phone, 
+accounts.email) as dop_inf
+FROM
+	vgroups
+LEFT JOIN
+    	staff
+ON
+	vgroups.vg_id = staff.vg_id
+RIGHT JOIN
+	accounts
+ON
+	accounts.uid = vgroups.uid
+RIGHT JOIN
+    	accounts_addr
+ON
+    	accounts_addr.uid = accounts.uid
+WHERE 	accounts_addr.type = 2
+
+
+
